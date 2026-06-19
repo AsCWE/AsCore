@@ -5,17 +5,24 @@ start:
 
  xor ax,ax
  mov ds,ax
+ mov es,ax
+ mov ss,ax
+ mov sp, 0x7E00
 
  mov si, welcome
  call PrintString
 
- mov bx, 0x8000
+ mov bx, 0x7E00
  call ReadDisk
+
  mov si, dsuccess
  call PrintString
- jmp $
+
+ jmp 0x0000:0x7E00
 
 ReadDisk:
+
+ pusha
 
  mov ah, 0x02
  mov al, 1
@@ -25,6 +32,7 @@ ReadDisk:
  mov dl, 0x00
  int 0x13
  jc DiskError
+ popa
  ret
 
 DiskError:
@@ -42,23 +50,20 @@ PrintChar:
 
 
 PrintString:
-
-NextChar:
- mov al, [si]
- inc si
- or al,al
- jz exit
- call PrintChar
- jmp NextChar
-
-exit:
+ mov ah, 0x0E
+.loop:
+ lodsb
+ cmp al, 0
+ je .done
+ int 0x10
+ jmp .loop
+.done:
  ret
 
 
 welcome db 'Welcome to AsCore!',13 ,10 ,0
 derror db 'Failed to read from sector',13 ,10 ,0
-dsuccess db 'Reading sector 2 success',13, 10 ,0
+dsuccess db 'Reading sector success',13, 10 ,0
+
 times 510 - ($ - $$) db 0
 dw 0xAA55
-
-times 512 db 0xDE
