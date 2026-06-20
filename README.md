@@ -37,13 +37,13 @@ The modern GCC toolchain forces Position Independent Executable (PIE) and Global
 Make sure you have `nasm`, `gcc`, `ld`, and `qemu` installed on your host system (e.g., Arch Linux toolchain).
 
 ### Automated Execution
-Run the custom automated pipeline script to compile everything and fire up the QEMU emulator emulator:
+Run the custom automated pipeline script to compile everything and fire up the QEMU emulator:
 
 ```bash
 chmod +x build.sh
 ./build.sh
 ```
-📅 Roadmap & Current Status
+## 📅 Roadmap & Current Status
 
     [x] Write custom 16-bit Real Mode MBR Bootloader.
 
@@ -60,9 +60,7 @@ chmod +x build.sh
     [ ] Design custom printf implementation for structured text output.
 
     [ ] Transition from 16-bit Real Mode to 32-bit Protected Mode (GDT setup).
-
-
-## License
+    ```
+   ## 📄 License
 
 This project is open-source and available under the GPL-3.0 License.
-
