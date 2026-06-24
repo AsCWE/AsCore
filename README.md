@@ -61,6 +61,10 @@ chmod +x build.sh
 
     [ ] Transition from 16-bit Real Mode to 32-bit Protected Mode (GDT setup).
     ```
-   ## 📄 License
+  ## 📄 License
 
-This project is open-source and available under the GPL-3.0 License.
+This project operates under a custom **AsCWE Transparency & Source-Available License**. 
+
+The code is fully open for the community to review, learn from, and audit. However, to protect this independent work from being commercialized by third parties or swallowed by AI training bots, strict restrictions apply to commercial use and machine learning dataset compilation. 
+
+We highly welcome individual contributions and non-commercial community support! Read the full license text in the [LICENSE](LICENSE) file.
