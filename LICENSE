@@ -16,27 +16,31 @@ you agree to be bound by the following terms and conditions:
 
 TERMS AND CONDITIONS:
 
-1. TRANSPARENCY AND EDUCATIONAL USE:
-   The source code is freely accessible to all individuals solely for 
+1. TRANSPARENCY, EDUCATIONAL, AND PERSONAL USE:
+   The source code is freely accessible to all individuals for 
    the purposes of security verification, privacy auditing, and 
-   educational learning in the fields of software development and 
-   systems engineering.
+   educational learning. Furthermore, individuals are explicitly 
+   granted the right to download, compile, modify, and run the 
+   software exclusively for personal, non-commercial purposes.
 
 2. COMMERCIAL USE PROHIBITION:
    Exclusive commercial rights belong solely to AsCWE. The source 
    code, compiled binaries, or any derivative works may NOT be 
    used, distributed, or exploited by any other natural or legal 
-   person for commercial purposes, including but not limited to 
-   sales, subscriptions, advertising, or paid service provisioning. 
+   person for commercial purposes (including but not limited to 
+   sales, subscriptions, advertising, or paid service provisioning). 
    This prohibition applies equally to cases where the core 
    architecture, algorithms, or structural logic of the code are 
-   copied and rewritten.
+   copied, translated to other programming languages, or rewritten 
+   as a clean-room reverse engineered derivative.
 
 3. PROPRIETARY CLOSING PROHIBITION (COPYLEFT-ISH):
-   Any derivative works, modifications, or projects inspired by this 
-   source code must remain open under this exact same license. Gating, 
-   embedding, or incorporating any part of this source code into a 
-   closed-source (proprietary) project is strictly prohibited.
+   Subject to the strict commercial prohibition in Section 2, any 
+   non-commercial derivative works, modifications, or projects 
+   inspired by this source code must remain open under this exact 
+   same license. Gating, embedding, or incorporating any part of 
+   this source code into a closed-source (proprietary) project is 
+   strictly prohibited.
 
 4. ARTIFICIAL INTELLIGENCE (AI) TRAINING BAN:
    The source code and its components may NOT be utilized as a 
@@ -46,13 +50,31 @@ TERMS AND CONDITIONS:
    code in its original form as well as modified versions. This code 
    is published for human intelligence only.
 
-5. PROTECTION OF SECURITY AND REPUTATION:
+5. CONTRIBUTIONS AND INTELLECTUAL PROPERTY:
+   Non-commercial contributions from the community are welcomed. 
+   By submitting modifications, bug fixes, or extensions (e.g., via 
+   Pull Requests) to the official AsCWE repository, contributors 
+   grant AsCWE a perpetual, worldwide, irrevocable right to use, 
+   modify, and commercially exploit those contributions, ensuring 
+   the project remains unified under AsCWE's stewardship.
+
+6. PROTECTION OF SECURITY AND REPUTATION:
    If this source code is modified and redistributed under the allowed 
    non-commercial terms, all original AsCWE branding, names, and 
    trademarks must be entirely removed. Incorporating malicious 
    code, malware, spyware, or backdoors into modified versions of 
-   this software is strictly prohibited. AsCWE shall not be held 
-   liable for any third-party modifications.
+   this software is strictly prohibited. 
+
+7. TERMINATION:
+   Any failure to comply with the terms and conditions of this 
+   license will result in the immediate and automatic termination 
+   of the rights granted herein. Upon termination, you must cease 
+   all use and destroy all copies of the software.
+
+8. JURISDICTION:
+   Any legal disputes arising from the breach of this license shall 
+   be exclusively settled under the courts and laws of the developer's 
+   registered jurisdiction.
 
 NO WARRANTY:
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. 
