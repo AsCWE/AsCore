@@ -1,23 +1,30 @@
 #!/bin/bash
 
-echo "[+] Compiling Bootloader"
-nasm -f bin boot.asm -o boot.bin
+set -e
 
-echo "[+] Compiling Kernel Entry..."
-nasm -f elf32 entry.asm -o kernel_entry.o
+TARGET="riscv64-elf"
 
-echo "[+] Compiling kernel..."
-gcc -m16 -ffreestanding -fno-pie -fno-pic -fno-asynchronous-unwind-tables -march=i386 -c kernel.c -o kernel.o
-gcc -m16 -ffreestanding -fno-pie -fno-pic -fno-asynchronous-unwind-tables -march=i386 -c io.c -o io.o
-gcc -m16 -ffreestanding -fno-pie -fno-pic -fno-asynchronous-unwind-tables -march=i386 -c vga.c -o vga.o
+echo "=== Compiling ==="
 
-echo "[+] Linking binaries..."
-ld -m elf_i386 -Ttext 0x7E00 -e _start --oformat binary -nostdlib kernel_entry.o kernel.o vga.o io.o -o kernel.bin
+echo "[1/5] Removing old files..."
+rm -f *.o kernel.elf
+rm -f ./*.o ./*.bin
 
-echo "[+] Creating 1.44 MB Floppy image..."
-dd if=/dev/zero of=ascore.img bs=1024 count=1440
-dd if=boot.bin of=ascore.img conv=notrunc
-dd if=kernel.bin of=ascore.img bs=512 seek=1 conv=notrunc
+echo "[2/5] Compiling Assembly sources..."
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -c boot.S -o boot.o
 
-echo "[+] Build complete. Initializating QEMU..."
-qemu-system-i386 -fda ascore.img
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -c trap.S -o trap_asm.o
+
+echo "[3/5] Compiling C sources..."
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c kernel.c -o kernel.o
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c trap.c -o trap.o
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c uart.c -o uart.o
+
+echo "[4/5] Linking..."
+$TARGET-ld -m elf32lriscv -T linker.ld boot.o trap_asm.o trap.o kernel.o uart.o -o kernel.elf
+
+echo "=== Compilation Success! ==="
+
+echo "[5/5] Initializating QEMU..."
+qemu-system-riscv32 -nographic -machine virt -bios none -kernel kernel.elf
+# Eehhhh! burayı da AI yazsın Uğraşamam
