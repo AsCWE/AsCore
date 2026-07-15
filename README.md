@@ -1,70 +1,38 @@
-# AsCore Operating System 🚀
+# AsCore 🚀
 
-AsCore is a hobbyist x86 operating system built from scratch, focusing on low-level system architecture, custom bootloader pipelines, and direct hardware manipulation. The project transitions from pure Assembly into a 16-bit Real Mode C environment to leverage structured kernel development.
-
----
-
-## 🗺️ System Architecture & Memory Map
-
-To ensure maximum efficiency and prevent hardware memory corruption, AsCore utilizes a carefully optimized segment layout within the 1 MB Real Mode boundaries:
-
-| Memory Address Range | Size | Usage / Purpose | Status |
-| :--- | :--- | :--- | :--- |
-| **`0x00000 - 0x003FF`** | 1 KB | Interrupt Vector Table (IVT) | **Reserved by BIOS** |
-| **`0x00400 - 0x004FF`** | 256 B | BIOS Data Area (BDA) | **Reserved by BIOS** |
-| **`0x00500 - 0x07BFF`** | ~30 KB | Safe Custom Stack Area (Grows Downwards) | **Active (Secured)** |
-| **`0x07C00 - 0x07DFF`** | 512 B | Main Boot Sector (`boot.asm`) | **Loaded by BIOS** |
-| **`0x07E00 - 0x7FFFF`** | ~480 KB | **Conventional Kernel Memory Space** | **Active (`kernel.c`)** |
-| **`0xB8000 - 0xBFFFF`** | 32 KB | VGA Text Mode Video Memory (Color Buffer) | **Direct Hardware I/O** |
+A minimalist, bare-metal microkernel built from scratch for the 32-bit RISC-V (`RV32`) architecture. Designed to run on the QEMU virtual machine (`virt` board), **AsCore** serves as a lightweight playground for systems programming, hardware-software co-design, and microkernel architecture exploration.
 
 ---
 
-## 🛠️ Compilation & Build Pipeline
+## 🛠️ Features
 
-The modern GCC toolchain forces Position Independent Executable (PIE) and Global Offset Tables (GOT) by default. AsCore uses specific compiler flags to bypass these mechanisms, producing raw, position-dependent 16-bit binary files.
-
-### Compilation Workflow
-1. **Bootloader Compilation:** Compiles `boot.asm` into a 512-byte raw binary master boot record (MBR).
-2. **Kernel Compilation:** Compiles `kernel.c` with 16-bit GCC inline directives, disabling the standard library (`-ffreestanding`) and stripping position-independent code attributes (`-fno-pie`, `-fno-pic`).
-3. **Linker Optimization:** Links `kernel.o` using `ld` at the explicit text offset of `0x7E00` matching the bootloader's jump address.
-4. **Image Flattening:** Merges binaries into a unified `1.44 MB` Floppy Disk Image (`ascore.img`) utilizing structured `dd` seeking blocks.
+* **Bare-Metal Bootstrapping:** Custom assembly startup code (`boot.S`) initializing the stack, global pointers, and CPU delegation.
+* **Vector Interrupt & Trap Handling:** Hand-crafted assembly vector table (`trap.S`) with full context save/restore, dispatching to a centralized C-based `trap_handler`.
+* **System Call Support:** Support for synchronous exceptions (`ecall` / environment calls from Machine-mode) with instruction program counter (`mepc`) adjustment.
+* **16550A UART Driver:** Custom polling and interrupt-driven Serial driver mapped via MMIO at `0x10000000`.
+* **PLIC Integration (WIP):** Target-specific Platform-Level Interrupt Controller configuration to route external keyboard and hardware interrupts.
+* **VGA Driver Module:** Native low-level VGA driver support for visual framebuffer output.
 
 ---
 
-## 🚀 How to Run
+## 📁 Project Structure
 
-### Prerequisites
-Make sure you have `nasm`, `gcc`, `ld`, and `qemu` installed on your host system (e.g., Arch Linux toolchain).
-
-### Automated Execution
-Run the custom automated pipeline script to compile everything and fire up the QEMU emulator:
-
-```bash
-chmod +x build.sh
-./build.sh
+```text
+AsCore/
+├── boot.S          # Assembly entry point (entry, setup stack, vector registration)
+├── trap.S          # Low-level trap vector (context save/restore, csrr/csrw)
+├── trap.c          # C trap handler (decodes mcause, handles ecalls & interrupts)
+├── kernel.c        # Kernel main entry point, PLIC/UART initialization, main loop
+├── uart.c/h        # 16550A UART driver for console I/O
+├── link.ld         # Linker script mapping the physical memory (loads at 0x80000000)
+└── build.sh        # Automation script for building and running on QEMU
 ```
-## 📅 Roadmap & Current Status
+## 🚀 Getting Started
+To compile and run AsCore, you need the RISC-V GNU Toolchain and QEMU installed on your host system.
+On Arch Linux:
+```bash
+sudo pacman -S riscv64-unknown-elf-gcc riscv64-unknown-elf-binutils qemu-system-riscv
+```
+## ⚖️ License
 
-    [x] Write custom 16-bit Real Mode MBR Bootloader.
-
-    [x] Implement robust BIOS CHS Floppy Disk sector reading.
-
-    [x] Isolate and secure Safe Stack Memory Range to prevent memory corruption.
-
-    [x] Configure 16-bit modern GCC toolchain cross-compilation pipeline.
-
-    [x] Implement low-level Screen Clearing Loop utilizing direct 0xB8000 VGA pointer overrides.
-
-    [ ] Implement advanced VGA hardware port driver (0x3D4 / 0x3D5 Outbound Tracking).
-
-    [ ] Design custom printf implementation for structured text output.
-
-    [ ] Transition from 16-bit Real Mode to 32-bit Protected Mode (GDT setup).
-    ```
-  ## 📄 License
-
-This project operates under a custom **AsCWE Transparency & Source-Available License**. 
-
-The code is fully open for the community to review, learn from, and audit. However, to protect this independent work from being commercialized by third parties or swallowed by AI training bots, strict restrictions apply to commercial use and machine learning dataset compilation. 
-
-We highly welcome individual contributions and non-commercial community support! Read the full license text in the [LICENSE](LICENSE) file.
+Distributed under the AsCWE Transparency and Source-Available License. See LICENSE for more information.
