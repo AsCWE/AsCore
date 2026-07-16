@@ -17,12 +17,17 @@ void trap_handler(void){
             uart_print("AsCore: Timer interrupt received.\n");
         }
         else if (int_id == 11){
-            volatile uint8_t *uart_rhr = (volatile uint8_t *)(0x10000000);
-            char c = *uart_rhr;
+            volatile uint32_t *plic_claim =(volatile uint32_t *)0x0C200004;
+            uint32_t irq = *plic_claim;
+            if(irq == 10){
+                volatile uint8_t *uart_rhr = (volatile uint8_t *)(0x10000000);
+                char c = *uart_rhr;
 
-            uart_print("AsCore: [Keyboard]: ");
-            uart_putc(c);
-            uart_print("\n");
+                uart_print("AsCore: [Keyboard]: ");
+                uart_putc(c);
+                uart_print("\n");
+            }
+            *plic_claim = irq;
         }
         else{
             uart_print("AsCore: Unknown external hardware interrupt received.\n");
