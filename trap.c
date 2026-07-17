@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "uart.h"
+#include "shell.h"
 
 extern void uart_print(const char *str);
 
@@ -20,12 +21,11 @@ void trap_handler(void){
             volatile uint32_t *plic_claim =(volatile uint32_t *)0x0C200004;
             uint32_t irq = *plic_claim;
             if(irq == 10){
-                volatile uint8_t *uart_rhr = (volatile uint8_t *)(0x10000000);
-                char c = *uart_rhr;
+                volatile uint8_t *uart_thr = (volatile uint8_t *)(0x10000000);
+                char c = *uart_thr;
 
-                uart_print("AsCore: [Keyboard]: ");
-                uart_putc(c);
-                uart_print("\n");
+                shell_inputc(c);
+
             }
             *plic_claim = irq;
         }
