@@ -19,9 +19,10 @@ echo "[3/5] Compiling C sources..."
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c kernel.c -o kernel.o
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c trap.c -o trap.o
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c uart.c -o uart.o
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c shell.c -o shell.o
 
 echo "[4/5] Linking..."
-$TARGET-ld -m elf32lriscv -T linker.ld boot.o trap_asm.o trap.o kernel.o uart.o -o kernel.elf
+$TARGET-ld -m elf32lriscv -T linker.ld boot.o trap_asm.o trap.o kernel.o uart.o shell.o -o kernel.elf
 
 echo "=== Compilation Success! ==="
 
