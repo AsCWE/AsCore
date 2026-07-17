@@ -1,38 +1,49 @@
 # AsCore 🚀
 
-A minimalist, bare-metal microkernel built from scratch for the 32-bit RISC-V (`RV32`) architecture. Designed to run on the QEMU virtual machine (`virt` board), **AsCore** serves as a lightweight playground for systems programming, hardware-software co-design, and microkernel architecture exploration.
+A minimalist, hobbyist microkernel built from the ground up for the RISC-V architecture.
 
 ---
 
-## 🛠️ Features
+## 📸 Preview
 
-* **Bare-Metal Bootstrapping:** Custom assembly startup code (`boot.S`) initializing the stack, global pointers, and CPU delegation.
-* **Vector Interrupt & Trap Handling:** Hand-crafted assembly vector table (`trap.S`) with full context save/restore, dispatching to a centralized C-based `trap_handler`.
-* **System Call Support:** Support for synchronous exceptions (`ecall` / environment calls from Machine-mode) with instruction program counter (`mepc`) adjustment.
-* **16550A UART Driver:** Custom polling and interrupt-driven Serial driver mapped via MMIO at `0x10000000`.
-* **PLIC Integration (WIP):** Target-specific Platform-Level Interrupt Controller configuration to route external keyboard and hardware interrupts.
-* **VGA Driver Module:** Native low-level VGA driver support for visual framebuffer output.
+![AsCore Shell Boot Preview](screenshot.png)
 
 ---
 
-## 📁 Project Structure
+## ✨ Features
 
-```text
-AsCore/
-├── boot.S          # Assembly entry point (entry, setup stack, vector registration)
-├── trap.S          # Low-level trap vector (context save/restore, csrr/csrw)
-├── trap.c          # C trap handler (decodes mcause, handles ecalls & interrupts)
-├── kernel.c        # Kernel main entry point, PLIC/UART initialization, main loop
-├── uart.c/h        # 16550A UART driver for console I/O
-├── link.ld         # Linker script mapping the physical memory (loads at 0x80000000)
-└── build.sh        # Automation script for building and running on QEMU
-```
-## 🚀 Getting Started
-To compile and run AsCore, you need the RISC-V GNU Toolchain and QEMU installed on your host system.
-On Arch Linux:
+* **Architecture:** 32-bit RISC-V (`RV32I`)[cite: 4].
+* **Environment:** 100% Bare-metal development (No standard library, no host OS dependencies)[cite: 7].
+* **Modular Codebase:** Clean separation between kernel core, hardware drivers, interrupts, and shell[cite: 5].
+* **Hardware Support:** Custom UART driver for serial communication and PLIC-based keyboard interrupts[cite: 3].
+* **Interactive Shell:** ANSI-colored, responsive command-line interface directly running on hardware[cite: 4].
+
+---
+
+## 🛠️ Project Structure
+
+* `boot.S` - Assembly entry point and bootstrap loader.
+* `trap.S` / `trap.c` - Low-level interrupt and exception handlers[cite: 3, 7].
+* `kernel.c` - Core initialization routines and hardware provisioning[cite: 1].
+* `shell.c` / `shell.h` - Interactive user interface and command parsers[cite: 4, 5].
+* `uart.c` / `uart.h` - Serial communication drivers[cite: 2, 6].
+
+---
+
+## 🚀 How to Run
+
+### Prerequisites
+You need the RISC-V toolchain (`riscv64-elf-gcc`, `riscv64-elf-ld`) and `qemu-system-riscv32` installed on your system[cite: 7].
+
+### Build and Emulate
+Simply run the compilation script to build the microkernel and launch it inside QEMU:
+
 ```bash
-sudo pacman -S riscv64-unknown-elf-gcc riscv64-unknown-elf-binutils qemu-system-riscv
+chmod +x build.sh
+./build.sh
 ```
+
+
 ## ⚖️ License
 
 Distributed under the AsCWE Transparency and Source-Available License. See LICENSE for more information.
