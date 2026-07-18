@@ -57,7 +57,7 @@ void read_command(char* cmd){
     else if(about){
         uart_print("AsCore is a hobbyist operating system built from the ground up.\n");
         uart_print("Architecture: RISC-V (RV32I).\n");
-        uart_print("Author: AsCWE(Self-Taught Systems Programmer) from Turkey.\n");
+        uart_print("Author: AsCWE(15 yaers old Self-Taught Systems Programmer) from Turkey.\n");
     }
 
     else if(clear){
