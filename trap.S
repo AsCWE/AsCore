@@ -41,7 +41,17 @@ trap_vector:
 # Calling our C function.
 jal ra, trap_handler
 
+csrr t0, mcause
+li t1, 11
+bne t0, t1, skip_mepc_inc
 
+csrr t0, mepc
+ # addi t0, t0, 4
+csrw mepc, t0
+
+
+
+skip_mepc_inc:
 # Restoring all registers.
  lw x1, 0(sp)
  lw x3, 4(sp)
@@ -51,7 +61,7 @@ jal ra, trap_handler
  lw x7, 20(sp)
  lw x8, 24(sp)
  lw x9, 28(sp)
- lw x10, 32(sp)
+# lw x10, 32(sp)
  lw x11, 36(sp)
  lw x12, 40(sp)
  lw x13, 44(sp)
