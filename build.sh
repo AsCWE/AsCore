@@ -4,13 +4,13 @@ set -e
 
 TARGET="riscv64-elf"
 
-echo "=== Compiling ==="
+echo "=== Starting==="
 
 echo "[1/5] Removing old files..."
 rm -f *.o kernel.elf
 rm -f ./*.o ./*.bin
 
-echo "[2/5] Compiling Assembly sources..."
+echo "[2/5] Compiling Assembly files..."
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -c boot.S -o boot.o
 
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -c trap.S -o trap_asm.o
@@ -20,11 +20,15 @@ $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c kernel.
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c trap.c -o trap.o
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c uart.c -o uart.o
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c shell.c -o shell.o
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c ipc.c -o ipc.o
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c task.c -o task.o
 
-echo "[4/5] Linking..."
-$TARGET-ld -m elf32lriscv -T linker.ld boot.o trap_asm.o trap.o kernel.o uart.o shell.o -o kernel.elf
 
-echo "=== Compilation Success! ==="
+
+echo "[4/5] Linking binaries..."
+$TARGET-ld -m elf32lriscv -T linker.ld boot.o trap_asm.o trap.o kernel.o uart.o shell.o ipc.o task.o -o kernel.elf
+
+echo "=== Success! ==="
 
 echo "[5/5] Initializating QEMU..."
 qemu-system-riscv32 -nographic -machine virt -bios none -kernel kernel.elf
