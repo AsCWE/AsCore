@@ -4,7 +4,7 @@ set -e
 
 TARGET="riscv64-elf"
 
-echo "=== Starting==="
+echo "=== Starting ==="
 
 echo "[1/5] Removing old files..."
 rm -f *.o kernel.elf
@@ -12,7 +12,7 @@ rm -f ./*.o ./*.bin
 
 echo "[2/5] Compiling Assembly files..."
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -c boot.S -o boot.o
-
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -c ctx_swtch.S -o ctx_swtch.o
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -c trap.S -o trap_asm.o
 
 echo "[3/5] Compiling C sources..."
@@ -22,14 +22,14 @@ $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c uart.c 
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c shell.c -o shell.o
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c ipc.c -o ipc.o
 $TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c task.c -o task.o
-
+$TARGET-gcc -march=rv32ima_zicsr -mabi=ilp32 -ffreestanding -nostdlib -c encrypt_net.c -o encrypt_net.o
 
 
 echo "[4/5] Linking binaries..."
-$TARGET-ld -m elf32lriscv -T linker.ld boot.o trap_asm.o trap.o kernel.o uart.o shell.o ipc.o task.o -o kernel.elf
+$TARGET-ld -m elf32lriscv -T linker.ld boot.o trap_asm.o ctx_swtch.o trap.o kernel.o encrypt_net.o uart.o shell.o ipc.o task.o -o kernel.elf
 
 echo "=== Success! ==="
 
-echo "[5/5] Initializating QEMU..."
+echo "[5/5]  Initializating QEMU..."
 qemu-system-riscv32 -nographic -machine virt -bios none -kernel kernel.elf
 # Eehhhh! burayı da AI yazsın Uğraşamam
