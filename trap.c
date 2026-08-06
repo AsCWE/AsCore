@@ -6,6 +6,7 @@
 #define DEBUG_TRAPS
 
 extern void uart_print(const char *str);
+extern void uart_printhex(uint32_t val);
 
 void trap_handler(uint32_t arg0, uint32_t arg1, uint32_t arg2){
     uint32_t mcause;

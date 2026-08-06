@@ -3,6 +3,7 @@ ENTRY( _start )
 
 SECTIONS
 {
+
   . = 0x80000000;
 
   .text : {
@@ -23,6 +24,7 @@ SECTIONS
     *(.bss .bss.*)
     *(COMMON)
   }
+
 
   . = ALIGN(16);
   . += 0x4000;
