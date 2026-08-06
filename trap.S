@@ -3,10 +3,8 @@
 .align 4
 
 trap_vector:
- # Abstracting 124 bytes on stack.
  addi sp, sp, -124
 
- # Saving all registers on stack.
  sw x1, 0(sp)
  sw x3, 4(sp)
  sw x4, 8(sp)
@@ -38,21 +36,18 @@ trap_vector:
  sw x30, 112(sp)
  sw x31, 116(sp)
 
-# Calling our C function.
 jal ra, trap_handler
 
 csrr t0, mcause
 li t1, 11
-bne t0, t1, skip_mepc_inc
+bne t0, t1, restore_a0_normally
 
-csrr t0, mepc
- # addi t0, t0, 4
-csrw mepc, t0
+j skip_a0_restore
 
+restore_a0_normally:
+ lw x10, 32(sp)
 
-
-skip_mepc_inc:
-# Restoring all registers.
+skip_a0_restore:
  lw x1, 0(sp)
  lw x3, 4(sp)
  lw x4, 8(sp)
@@ -61,7 +56,6 @@ skip_mepc_inc:
  lw x7, 20(sp)
  lw x8, 24(sp)
  lw x9, 28(sp)
-# lw x10, 32(sp)
  lw x11, 36(sp)
  lw x12, 40(sp)
  lw x13, 44(sp)
@@ -85,5 +79,4 @@ skip_mepc_inc:
  lw x31, 116(sp)
 
 addi sp, sp, 124
-
 mret
