@@ -3,6 +3,7 @@
 #include "shell.h"
 #include "task.h"
 #include "ipc.h"
+#include "encrypt_net.h"
 
 extern volatile int cmd_ready;
 extern volatile int cmd_idx;
@@ -30,7 +31,7 @@ void kernel_main(void){
     current_task = task_create(PID_SHELL, "shell");
     current_task->state = TASK_RUNNING;
 
-    task_create(PID_ENCRYPT_NET, "encrypt_net");
+    task_spawn(PID_ENCRYPT_NET, "encrypt_net", encrypt_net_main);
 
     uart_print("AsCore Kernel Booted Successfully!\n");
 
@@ -44,5 +45,6 @@ void kernel_main(void){
             cmd_ready = 0;
             print_prompt();
         }
+        yield();
     }
 }
