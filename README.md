@@ -29,18 +29,20 @@ A minimalist, hobbyist microkernel built from the ground up for the RISC-V archi
 * `kernel.c` - Core initialization routines and hardware provisioning.
 * `shell.c` / `shell.h` - Interactive user interface and command parsers.
 * `uart.c` / `uart.h` - Serial communication drivers.
-* `task.c` / `task.h` - Task structure, task table, and current-task tracking.
+* `ctx_switch.S` - Cooperative context switch (register save/restore between tasks).
+*  `task.c` / `task.h` - Task structure, task table, and current-task tracking.
+* `encrypt_net.c` / `encrypt_net.h` - Example second task, demonstrates end-to-end IPC via blocking recv.
 * `ipc.c` / `ipc.h` - Syscall-driven IPC handler and message routing.
-
+* 
 ## 🚧 Status
 
 - [x] Boot & trap handling
 - [x] UART driver + interactive shell
 - [x] Task structure + current_task tracking
-- [ ] target_pid validation
-- [ ] IPC mailbox
-- [ ] Scheduler
-- [ ] Blocking recv
+- [X] target_pid validation
+- [X] IPC mailbox
+- [X] Scheduler
+- [X] Blocking recv
 - [ ] Permission table
 
 ---
@@ -57,6 +59,8 @@ Simply run the compilation script to build the microkernel and launch it inside 
 chmod +x build.sh
 ./build.sh
 ```
+## AI Assistance
+This repository includes AI-assisted contributions in development, code review, or documentation.
 
 
 ## ⚖️ License
