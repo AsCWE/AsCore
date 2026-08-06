@@ -1,11 +1,12 @@
 #include "uart.h"
 #include "shell.h"
 #include <stdint.h>
+#include "ipc.h"
 
 #define CMD_LEN_MAX 64
 
 char cmd_buffer[CMD_LEN_MAX];
-int cmd_idx = 0;
+volatile int cmd_idx = 0;
 
 #define PRINT_RESET   "\033[0m"
 #define PRINT_BOLD    "\033[1m"
@@ -13,6 +14,25 @@ int cmd_idx = 0;
 #define PRINT_GREEN   "\033[32m"
 #define PRINT_RED     "\033[31m"
 #define PRINT_CLEAR   "\033[H\033[J"
+
+
+
+
+uint32_t test_ipc_call(uint32_t cmd, uint32_t target, uint32_t data){
+    register uint32_t a0 asm("a0") = cmd;
+    register uint32_t a1 asm("a1") = target;
+    register uint32_t a2 asm("a2") = data;
+
+    asm volatile(
+        "ecall\n"
+        :"+r"(a0)
+        :"r"(a1), "r"(a2)
+        :"memory"
+    );
+    return a0;
+}
+
+
 
 void print_banner(void){
 
@@ -47,6 +67,7 @@ void read_command(char* cmd){
  int about = (cmd[0] == 'a' && cmd[1] == 'b' && cmd[2] == 'o' && cmd[3] == 'u' && cmd[4] == 't' && cmd[5] == '\0');
 
 
+
     if(help){
         uart_print(PRINT_BOLD "Available Commands: \n" PRINT_RESET);
         uart_print(" help - Show this help menu.\n");
@@ -55,9 +76,9 @@ void read_command(char* cmd){
     }
 
     else if(about){
-        uart_print("AsCore is a hobbyist operating system built from the ground up.\n");
+        uart_print("AsCore is a hobbyist operating system built completely from the ground up.\n");
         uart_print("Architecture: RISC-V (RV32I).\n");
-        uart_print("Author: AsCWE(15 yaers old Self-Taught Systems Programmer) from Turkey.\n");
+        uart_print("Author: AsCWE(15 years old Self-Taught Systems Programmer) from Turkey.\n");
     }
 
     else if(clear){
@@ -70,22 +91,19 @@ void read_command(char* cmd){
 
 }
 
+volatile int cmd_ready = 0;
+
 void shell_inputc(char c){
-
     if(c == '\r' || c == '\n'){
-
         cmd_buffer[cmd_idx] = '\0';
-        read_command(cmd_buffer);
-        cmd_idx = 0;
-        print_prompt();
+        uart_print("\n");
+        cmd_ready = 1;
     }
-
     else if(c == 127 || c == '\b'){
         if(cmd_idx > 0){
             cmd_idx--;
             uart_print("\b \b");
         }
-
     }
     else{
         if(cmd_idx < CMD_LEN_MAX - 1){
