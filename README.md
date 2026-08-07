@@ -43,7 +43,7 @@ A minimalist, hobbyist microkernel built from the ground up for the RISC-V archi
 - [X] IPC mailbox
 - [X] Scheduler
 - [X] Blocking recv
-- [ ] Permission table
+- [X] Permission table
 
 ---
 
