@@ -47,7 +47,7 @@ void print_banner(void){
     uart_print(" ##     ## ##    ## ##    ## ##     ## ##    ##  ##\n");
     uart_print(" ##     ##  ######   ######   #######  ##     ## ######\n");
     uart_print("========================================================\n" PRINT_RESET);
-    uart_print(PRINT_CYAN "AsCore v0.0.2(RV32I-ML-15/07/2026)\n" PRINT_RESET);
+    uart_print(PRINT_CYAN "AsCore v0.0.2(RV32I-ML-7/0&/2026)\n" PRINT_RESET);
     uart_print("Type \"help\" to see available commands.\n\n ");
 }
 void print_prompt(void){
