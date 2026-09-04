@@ -59,7 +59,7 @@ Simply run the compilation script to build the microkernel and launch it inside 
 chmod +x build.sh
 ./build.sh
 ```
-## AI Assistance
+## 🤖 AI Assistance
 This repository includes AI-assisted contributions in development, code review, or documentation.
 
 
